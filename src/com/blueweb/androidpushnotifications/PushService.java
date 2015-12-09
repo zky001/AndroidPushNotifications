@@ -178,7 +178,7 @@ public class PushService extends Service
 		super.onStart(intent, startId);
 		log("Service started with intent=" + intent);
 
-		// Do an appropriate action based on the intent.
+		// 基于intent传递合适的动作.
 		if (intent.getAction().equals(ACTION_STOP) == true) {
 			stop();
 			stopSelf();
@@ -198,7 +198,7 @@ public class PushService extends Service
 		return null;
 	}
 
-	// log helper function
+	// 日志帮助模块
 	private void log(String message) {
 		log(message, null);
 	}
@@ -218,7 +218,7 @@ public class PushService extends Service
 		}		
 	}
 	
-	// Reads whether or not the service has been started from the preferences
+	// 读取服务是否从preferences中启动
 	private boolean wasStarted() {
 		return mPrefs.getBoolean(PREF_STARTED, false);
 	}
@@ -241,7 +241,7 @@ public class PushService extends Service
 		// Establish an MQTT connection
 		connect();
 		
-		// Register a connectivity listener
+		// 注册一个连接监听者
 		registerReceiver(mConnectivityChanged, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));		
 	}
 
@@ -252,10 +252,10 @@ public class PushService extends Service
 			return;
 		}
 
-		// Save stopped state in the preferences
+		// 在preferences存储停止时的状态
 		setStarted(false);
 
-		// Remove the connectivity receiver
+		// 移除连接监听者
 		unregisterReceiver(mConnectivityChanged);
 		// Any existing reconnect timers should be removed, since we explicitly stopping the service.
 		cancelReconnect();
@@ -272,7 +272,7 @@ public class PushService extends Service
 		log("Connecting...");
 		// fetch the device ID from the preferences.
 		String deviceID = mPrefs.getString(PREF_DEVICE_ID, null);
-		// Create a new connection only if the device id is not NULL
+		// 创建一个新连接
 		if (deviceID == null) {
 			log("Device ID not found.");
 		} else {
@@ -420,7 +420,7 @@ public class PushService extends Service
 		mNotifMan.notify(NOTIF_CONNECTED, n);
 	}
 	
-	// Check if we are online
+	// 确定网络是否在线
 	private boolean isNetworkAvailable() {
 		NetworkInfo info = mConnMan.getActiveNetworkInfo();
 		if (info == null) {
@@ -515,7 +515,7 @@ public class PushService extends Service
 		 * Called when we receive a message from the message broker. 
 		 */
 		public void publishArrived(String topicName, byte[] payload, int qos, boolean retained) {
-			// Show a notification
+			// 显示推送通知
 			String s = new String(payload);
 			showNotification(s);	
 			log("Got message: " + s);
